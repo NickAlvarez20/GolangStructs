@@ -1,47 +1,76 @@
-//Import packages for program
-package main	
-//Import fmt for I/O Operations
+//Import package
+package main
+
+//Import fmt for formatting I/O operations
 import "fmt"
 
-//Design of this program is to create a library and be able to add various features
-type Book struct {
-	Title string
-	Year int
-	Author string
+//Define a node struct
+type Node struct{
+	data int
+	next *Node
 }
 
-//Create a library with an empty slice of Book
-type Library struct {
-	Books []Book
+//Define the LinkedList structure
+type LinkedList struct{
+	head *Node
 }
 
-//AddBook Method with a pointer receiver
-func (l *Library) AddBook(book Book){
-	l.Books = append(l.Books, book)
-	
+//Insert node at the beginning
+func (ll *LinkedList) InsertAtBeginning(data int){
+	newNode := &Node{data: data, next: ll.head}
+	ll.head = newNode
 }
 
-//ViewBooks Method
-func (l Library) ViewBooks(){
-	for _, book := range l.Books{
-	fmt.Printf("Title: %s, Year %d, Author: %s\n",book.Title,book.Year,book.Author)
-	} 
+//Displaying the list
+func (ll *LinkedList) Display() {
+	current := ll.head
+	for current != nil {
+		fmt.Printf("%d -> ", current.data)
+		current = current.next
+	}
+	fmt.Println("nil")
 }
 
-/*Create main func
--instantiate a library
--add books
--viewbook
-*/
-func main(){
-	//instantiate library
-	BigLibrary := Library{[]Book{}}
-	//addbooks
-	BigLibrary.AddBook(Book{Title: "The Gaming Guide", Year: 2022, Author: "Nicholas Alvarez"})
-	//addbooks
-	BigLibrary.AddBook(Book{Title: "The Youtube Creation Guide", Year: 2023, Author: "Nicholas Alvarez"})
-	//viewbooks
-	BigLibrary.ViewBooks()
+//Adding a node at the end
+func (ll *LinkedList) Append(data int){
+	newNode := &Node{data: data, next:nil}
+
+	if ll.head == nil{
+		ll.head = newNode
+		return
+	}
+
+	current := ll.head
+	for current.next != nil {
+		current = current.next
+	}
+	current.next = newNode
+}
+
+func main() {
+    // Create a new LinkedList
+    ll := LinkedList{}
+
+    // Test InsertAtBeginning
+    ll.InsertAtBeginning(10)
+    ll.InsertAtBeginning(20)
+    ll.InsertAtBeginning(30)
+
+    fmt.Println("After inserting 30, 20, 10 at the beginning:")
+    ll.Display()
+
+    // Test Append
+    ll.Append(40)
+    ll.Append(50)
+
+    fmt.Println("After appending 40 and 50:")
+    ll.Display()
+
+    // Test more InsertAtBeginning
+    ll.InsertAtBeginning(60)
+
+    fmt.Println("After inserting 60 at the beginning:")
+    ll.Display()
 }
 
 // go run practice.go
