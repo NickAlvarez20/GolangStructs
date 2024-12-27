@@ -1,54 +1,65 @@
-//Import package
 package main
 
 //Import fmt for formatting I/O Operations
-import "fmt"
+import (
+	"errors"
+	"fmt"
+)
 
-//Define a Cookie Struct
+const maxCookies = 2 //Define max cookies here
+
+//Cookie represents the structure of a cookie with its brand, size, and quantity
 type Cookie struct{
-	name string
-	count int
+	//Brands holds the name of manufacturer
+	brand string
+
+	//Size describes the physical size of the cookie, e.g., "small"
 	size string
+
+	//Count indicates the number of cookies in this instance
+	count int
 }
 
-//Define a CookieBox Struct | Holds Cookie Boxes | Slice of Cookie for Dynamic Sizing and Data Manipulation
+//Cookiebox represents a box that holds cookies
 type CookieBox struct{
+	//Cookies is a slice containing Cookie structs, representing the cookies in the box
 	Cookies []Cookie
 }
 
-//create a function that adds a new cookie to the cookie box
-func (c *CookieBox) AddCookie(cookie Cookie){
+//AddCookie appends the given cookie to the Cookiebox
+func (c *CookieBox) AddCookie(cookie Cookie) error{
+	//Error Check Edge Case
+	if len(c.Cookies) >= maxCookies {
+		return errors.New("cookie box is full")
+	}
 	c.Cookies = append(c.Cookies, cookie)
+	return nil
 }
 
-//Implement ViewCookies Function
-func (c CookieBox) ViewCookies(){
+//Display cookies displayes all the cookies in the cookiebox
+func (c *CookieBox) DisplayCookies(){
 	for _, cookie := range c.Cookies{
-		fmt.Printf("Cookie Name: %s, Cookie Count: %d, Cookie Size: %s\n",cookie.name, cookie.count, cookie.size)
+		fmt.Printf("Brand: %s, Size: %s, Count: %d\n",cookie.brand,cookie.size,cookie.count)
 	}
 }
 
-//Test in main func 
+//Test Methods and Instantiate a Cookiebox
 func main(){
-	//Instantiate a Cookie Box
-	GrokCookieBox := CookieBox{
-		Cookies: []Cookie{
-			{name: "Chocy Chip", size: "Large", count: 12},
-			{name: "White Chocy", size: "Medium", count: 12},
-		},
-	}
-	//View Cookies
-	GrokCookieBox.ViewCookies()
-	//Add break in line here for formatting
+	//Instantiate a cookie box with 3 cookies
+	ChristmasCookies := CookieBox{[]Cookie{
+		{brand: "Hersheys", size: "Large", count: 12},
+		{brand: "DoubleChocy", size: "Extra Large", count: 24},
+	}}
+	//Add cookies to the box
+	ChristmasCookies.AddCookie(Cookie{brand: "Nestle",size: "Medium",count: 12})
+	//Format a print line in between
 	fmt.Println()
-	//Add Cookies
-	GrokCookieBox.AddCookie(Cookie{name: "White Chocy Chip", size: "Medium", count: 12})
-	//View Cookies
-	GrokCookieBox.ViewCookies()
+	//Add Cookie
+	ChristmasCookies.AddCookie(Cookie{brand: "GrokChristmasSnackos",size: "Small",count: 1200})
+	
+	//View cookies in the box
+	ChristmasCookies.DisplayCookies()
 }
-
-
-
 
 
 //go run Structs.go
